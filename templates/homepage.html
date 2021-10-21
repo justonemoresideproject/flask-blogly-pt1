@@ -15,7 +15,7 @@
 </form> -->
 <ul>
     {% for user in users %}
-    <li><img src="{{user.image_url}}" alt="" class="profilePic">{{user.get_full_name()}} <a href="/editUser/{{user.id}}">Edit</a></li>
+    <li><img src="{{user.image_url}}" alt="" class="profilePic">{{user.get_full_name}} <a href="/editUser/{{user.id}}">Edit</a></li>
     {% endfor %}
 </ul>
 <form action="/addNewUser">
