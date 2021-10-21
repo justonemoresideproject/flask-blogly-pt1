@@ -11,10 +11,14 @@ app.config['SQLALCHEMY_ECHO'] = True
 connect_db(app)
 db.create_all()
 
+# THIS VARIABLE
+users = User.query.order_by(User.last_name, User.first_name).all()
+
 @app.route('/')
 def homepage():
     """Shows all users"""
-    users = User.query.all()
+    # SHOULD PASS TO THIS VARIABLE, THEN  TO THE VARIABLE IN THE PARENTHESES
+    users = users
     return render_template('homepage.html', users=users)
 
 @app.route('/addNewUser')
@@ -25,17 +29,32 @@ def newUser():
 @app.route('/addedUser', methods=['POST'])
 def addedUser():
     """Adds new user"""
-    # first = request.args['first']
-    # last = request.args.get['last']
-    # url = request.args.get['image']
-
-    # Taken from solution
     new_user = User(
         first_name=request.form['first'],
         last_name=request.form['last'],
         image_url=request.form['image'] or None)
 
     db.session.add(new_user)
+    db.session.commit()
+
+    return redirect('/')
+
+@app.route('/editUser/<id>')
+def editUser(id):
+    """Edits a user by requesting a value from 0 to # of users. Then passes that value and to editUser.html to request the correct information."""
+
+    user = User.query.order_by(User.id).all()[int(id) - 1]
+
+    return render_template('editUser.html', user=user)
+
+@app.route('/commit/<id>')
+def commitChanges(id):
+    changedUser = User.query.order_by(User.id).all()[int(id)]
+    changedUser.first_name = request.form['first']
+    changedUser.last_name = request.form['last']
+    changedUser.image_url = request.form['image']
+
+    db.session.add(changedUser)
     db.session.commit()
 
     return redirect('/')

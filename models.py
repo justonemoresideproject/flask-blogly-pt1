@@ -1,7 +1,7 @@
 """Models for Blogly."""
 from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()
+db = SQLAlchemy() 
 
 def connect_db(app):
         db.app = app
@@ -15,7 +15,12 @@ class User(db.Model):
     @property
     def represent(self):
         p = self
-        return f"<Pet id={p.id} first name={p.first_name} last name={p.last_name} image_url={p.image_url}>"
+        return f"<id={p.id} first name={p.first_name} last name={p.last_name} image_url={p.image_url}>"
+
+    @property
+    def get_full_name(self):
+        p = self
+        return f"{p.first_name} {p.last_name}"
 
     id = db.Column(db.Integer,
             primary_key=True,
